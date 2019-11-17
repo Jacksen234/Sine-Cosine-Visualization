@@ -2,13 +2,18 @@ let i = 0;
 let sliderRadius;
 var count = 0;
 let sliderSpeed;
+const interval = 13;
+let pMillis = 0;
+let currentMillis;
+let xsineinc = 20;
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  sliderRadius = createSlider(20, 900, 300);
+  sliderRadius = createSlider(20, 900, 256);
   sliderRadius.position(0, 100);
   sliderRadius.style('width', '100');
-  sliderSpeed = createSlider(0.001, 0.5, 0.02, 0.001);
+  sliderSpeed = createSlider(0.001, 0.5, 0.01, 0.001);
   sliderSpeed.position(0, 200);
   sliderSpeed.style('width', '100')
 
@@ -85,7 +90,7 @@ function draw() {
   noStroke();
   fill(220);
   text('Amplitude:', 0, 80);
-  text('Period Duration*(-1):', 0, 180);
+  text('b:', 0, 180);
   push();
   fill('rgba(220,220,220,0.4)');
   rect(windowWidth - 400, 0, 400, 800);
@@ -95,21 +100,44 @@ function draw() {
   text('Lenght A', windowWidth - 200, 200);
   text('Lenght B', windowWidth - 200, 300);
   text('Degrees', windowWidth - 200, 400);
-  text(sliderRadius.value(), windowWidth - 200, 150);
+  text(sliderRadius.value()/2, windowWidth - 200, 150);
   text(-x.toFixed(2), windowWidth - 200, 250);
   text(y.toFixed(2), windowWidth - 200, 350);
   pop();
   pop();
 	push();
 
+  let amp = ((sliderRadius.value()*0.5)/128).toFixed(2);
+
+  function ampRound(num){
+    if(num==1){
+      return "";
+    }
+    else if(num == Math.round(num)){
+      return Math.round(num);
+    }
+    else{
+      return num;
+    }
+  }
   textSize(20);
   fill(240,80,80);
   ellipse(20,windowHeight*0.8,20);
   fill(80,114,240);
   ellipse(20, windowHeight*0.85,20,20);
-  text('f(x)='+sliderRadius.value()*0.5+' *sin('+ sliderSpeed.value()+' * x+c)+d ',45, windowHeight*0.86);
+  text('f(x)='+ ampRound(amp) +' sin('+ (sliderSpeed.value()*50).toFixed(2) +' * x+c)+d ',45, windowHeight*0.86);
   fill(240,80,80);
-  text('f(x)='+sliderRadius.value()*0.5+' *cos('+ sliderSpeed.value()+' * x+c)+d ',45, windowHeight*0.81);
+  text('f(x)='+ampRound(amp)+' cos('+ (sliderSpeed.value()*50).toFixed(2)+' * x+c)+d ',45, windowHeight*0.81);
+c
 
+  let xSine=sliderRadius.value()*0.5;
+  translate(width/4, height/2)
+  currentMillis = millis();
+  if(currentMillis-pMillis >= interval){
+    pMillis=currentMillis;
+    xsineinc+=1;
 
+  }
+  fill(80,114,240)
+  ellipse(xSine+xsineinc, y, 10);
 }
